@@ -3,21 +3,21 @@ import { Colors } from "../../json/global";
 
 const DashContainers = [
   {
-    number: 33,
+    number: 0,
     title: "Garrafas",
     gradient: ["#F89797", "#FF2727"],
     color: "#FFA0A0",
     type: 0,
   },
   {
-    number: 9,
+    number: 0,
     title: "Secções",
     gradient: ["#FDD891", "#FFC327"],
     color: "#FFEBB7",
     type: 0,
   },
   {
-    number: 13,
+    number: 0,
     title: "Encomendas",
     gradient: ["#C3FF9E", "#1ED800"],
     color: "#BEFFB4",
@@ -132,6 +132,35 @@ const MainStyles = StyleSheet.create({
     fontWeight: "700",
     color: "#000",
     fontSize: 20,
+  },
+  MainTitle: {
+    marginTop: 50,
+    fontSize: 45,
+    textAlign: "center",
+    fontFamily: "Sansita One",
+    color: Colors.Primary,
+  },
+  input: {
+    color: Colors.Text,
+    fontFamily: "Nunito Italic",
+    padding: 15,
+    width: 285,
+    backgroundColor: Colors.Secondary,
+    borderRadius: 20,
+  },
+  eInput: {
+    fontFamily: "Nunito Bold Italic",
+    borderWidth: 2,
+    borderColor: Colors.Primary,
+  },
+  button: {
+    height: 65,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: Colors.Primary,
+    borderRadius: 20,
+    marginVertical: 15,
+    width: 285,
   },
 });
 

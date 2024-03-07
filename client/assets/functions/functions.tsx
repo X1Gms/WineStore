@@ -3,6 +3,7 @@ import { TextProps } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { RootSiblingParent } from "react-native-root-siblings";
+import { View } from "react-native";
 
 const Functions: React.FC<TextProps> = ({ children }) => {
   return (

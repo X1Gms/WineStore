@@ -26,7 +26,7 @@ const LGContainer: React.FC<{
               {typeof number === "number" ? (
                 number
               ) : (
-                <Icon size={33} name={number} />
+                <Icon size={40} name={number} />
               )}
             </Text>
             <Text style={[styles.StatusSub, { color }]}>{title}</Text>

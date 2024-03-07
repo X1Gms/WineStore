@@ -1,14 +1,43 @@
 import { Text, View, ScrollView, Pressable } from "react-native";
 import { MainStyles } from "./mainset";
 import Icon from "react-native-vector-icons/Feather";
-import { DashContainers, DashAltContainers } from "./mainset";
+import { DashContainers as DC, DashAltContainers } from "./mainset";
 import * as Animatable from "react-native-animatable";
 import LGContainer from "./LGContainer";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { retrieveData } from "../../json/global";
+import Requests from "../../components/Requests";
+import { useFocusEffect } from "@react-navigation/native";
 
 const Main: React.FC<{ navigation: any }> = ({ navigation }) => {
   const [type, SetType] = useState(false);
+
+  const [myName, setMyName] = useState<string | null>(null);
+
+  const [DashContainers, SetDC] = useState(DC);
+
+  const fetchData = async () => {
+    const name = await retrieveData("name");
+    setMyName(name);
+
+    const getInfo = await Requests("getinfo", "GET", null);
+    console.log(getInfo);
+
+    const uDashContainers = DashContainers.map((item, index) => ({
+      ...item,
+      number: index < getInfo.length ? getInfo[index] : item.number,
+    }));
+
+    SetDC(uDashContainers);
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchData();
+    }, [])
+  );
 
   const Toggle = () => SetType((prev) => !prev);
 
@@ -17,16 +46,19 @@ const Main: React.FC<{ navigation: any }> = ({ navigation }) => {
   };
 
   return (
-    <View>
+    <View style={{ backgroundColor: "#FFF" }}>
       <View style={{ marginTop: 50, marginHorizontal: 25 }}>
         <View style={{ justifyContent: "space-between", flexDirection: "row" }}>
           <View>
             <Text style={MainStyles.Welcome}>Bem-Vindo(a) de Volta</Text>
-            <Text style={MainStyles.MyName}>João Barradas</Text>
+            <Text style={MainStyles.MyName}>{myName}</Text>
           </View>
           <Pressable
             style={[MainStyles.returnButton, { marginRight: 10 }]}
-            onPress={() => GoTo("Login")}
+            onPress={async () => {
+              await AsyncStorage.setItem("info", "");
+              GoTo("Login");
+            }}
           >
             <Icon name="log-out" size={30} color="#B53170" />
           </Pressable>
@@ -64,7 +96,11 @@ const Main: React.FC<{ navigation: any }> = ({ navigation }) => {
               onPress={() => {
                 switch (index) {
                   case 0:
-                    console.log("Hi");
+                    GoTo("CreateSection");
+
+                    break;
+                  case 1:
+                    GoTo("AddBottle");
 
                     break;
 

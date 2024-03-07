@@ -4,6 +4,7 @@ const Requests = async (page: string, method: string, data: any) => {
   try {
     let response;
     const LOCALHOST = process.env.LOCALHOST;
+    console.log(LOCALHOST);
 
     switch (method.toLocaleLowerCase()) {
       case "get":

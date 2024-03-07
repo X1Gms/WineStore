@@ -5,8 +5,9 @@ import {
   Pressable,
   SafeAreaView,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Colors } from "../../json/global";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { LoginInputs, handleInputs } from "./logreg";
 import EditText from "../../components/EditText";
 import { RegLogStyles } from "./logreg";
@@ -14,52 +15,88 @@ import Requests from "../../components/Requests";
 import Toast from "react-native-root-toast";
 import { ScrollView } from "react-native";
 
-const Login: React.FC<{ navigation: any }> = ({ navigation }) => {
+const Login: any = ({ navigation }: { navigation: any }) => {
   const [loginInputs, SetLoginInputs] = useState(LoginInputs);
 
-  const GoToRegister = () => navigation.navigate("Register");
-  const SendRequest = () => {
-    const result: any = {};
-    loginInputs.map((item) => {
-      if (item.type !== "Cpassword") {
-        result[item.type] = item.value.trim();
+  useEffect(() => {
+    Execute();
+  }, []);
+
+  const GetInfo = async () => {
+    try {
+      const infoString = await AsyncStorage.getItem("info");
+      if (infoString) {
+        const info = JSON.parse(infoString);
+        return info;
       }
-    });
+      return null; // Handle case where AsyncStorage has no data for "info"
+    } catch (e) {
+      console.error("Error retrieving 'info' from AsyncStorage:", e);
+      return null;
+    }
+  };
+
+  const GoTo = (where: string, values: any) =>
+    navigation.navigate(where, values);
+  const SendRequest = (info: any) => {
+    const result: any = {};
+
+    if (info && info?.email && info?.password) {
+      result.email = info?.email;
+      result.password = info?.password;
+    } else {
+      loginInputs.map((item) => (result[item.type] = item.value.trim()));
+    }
 
     const emptyInputs: any = loginInputs.filter(({ value }) => !value);
 
-    if (emptyInputs.length === 0) {
+    if (emptyInputs.length === 0 || info) {
       Requests("login", "POST", result)
-        .then((response) => {
+        .then(async (response) => {
           if (response) {
+            await AsyncStorage.setItem("info", JSON.stringify(result));
+            await AsyncStorage.setItem("name", response);
+
             setTimeout(() => {
               SetLoginInputs((prev) =>
                 prev.map((item) => ({ ...item, value: "" }))
               );
 
-              navigation.navigate("Main");
+              GoTo("Main", null);
             }, 1000);
           } else {
             Toast.show("Utilizador ou Palavra-Passe Incorretos");
           }
         })
         .catch((e) => {
-          console.error("Axios Error:", e);
+          console.error(e);
         });
     } else {
       Toast.show("Caixas de Texto Vazias");
     }
   };
 
+  const Execute = async () => {
+    try {
+      const info = await GetInfo();
+      if (info && info?.email && info?.password) {
+        SendRequest(info);
+      } else {
+        console.log("Nothing here to See");
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{ backgroundColor: "#FFF3F9", flex: 1 }}>
       <ScrollView>
         <View
           style={{
             alignItems: "center",
             paddingTop: 150,
             flex: 1,
-            backgroundColor: "#FFF3F9",
           }}
         >
           <View style={[RegLogStyles.MainOne]}>
@@ -113,7 +150,7 @@ const Login: React.FC<{ navigation: any }> = ({ navigation }) => {
                 Login
               </Text>
             </TouchableHighlight>
-            <Pressable onPress={GoToRegister}>
+            <Pressable onPress={() => GoTo("Register", null)}>
               <Text
                 style={{
                   textAlign: "right",

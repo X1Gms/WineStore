@@ -5,6 +5,9 @@ import cors from "cors";
 import "dotenv/config";
 import db from "./db.js";
 import User from "./schema/User.js";
+import Section from "./schema/Section.js";
+import Bottle from "./schema/Bottles.js";
+import Order from "./schema/Orders.js";
 
 const app = express();
 
@@ -16,7 +19,6 @@ app.use(cors());
 const PORT = 3000;
 
 app.post("/register", (req, res) => {
-  console.log(req.body.name);
   bcrypt.hash(req.body.password, 15, async (err, hash) => {
     await User.create({
       name: req.body.name,
@@ -28,6 +30,24 @@ app.post("/register", (req, res) => {
   });
 });
 
+app.get("/getinfo", async (req, res) => {
+  const info = [];
+
+  info.push(0);
+  info.push(await Section.count());
+  info.push(0);
+
+  res.send(info);
+});
+
+app.post("/ctsection", async (req, res) => {
+  await Section.create({
+    section: req.body.section,
+  })
+    .then(() => res.send("Secção Criada"))
+    .catch((e) => res.send(e));
+});
+
 app.post("/login", async (req, res) => {
   try {
     const user = await User.findOne({
@@ -35,7 +55,6 @@ app.post("/login", async (req, res) => {
         email: req.body.email,
       },
     });
-    console.log(user);
 
     if (!user) {
       // User not found
@@ -43,13 +62,9 @@ app.post("/login", async (req, res) => {
       return;
     }
 
-    bcrypt.compare(
-      req.body.password,
-      user.dataValues.password,
-      (err, result) => {
-        res.send(result);
-      }
-    );
+    bcrypt.compare(req.body.password, user.dataValues.password, () => {
+      res.send(user.name);
+    });
   } catch (error) {
     console.log(error);
     res.status(500).send("Internal Server Error");

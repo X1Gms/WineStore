@@ -1,3 +1,5 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 const Colors: { [key: string]: string } = {
   Primary: "#B53170",
   Secondary: "#FFEEF7",
@@ -9,4 +11,22 @@ const Colors: { [key: string]: string } = {
   LightGray: "#9a9a9a",
 };
 
-export { Colors };
+const retrieveData = async (key: string): Promise<string | null> => {
+  try {
+    const value = await AsyncStorage.getItem(key);
+    if (value !== null) {
+      // Data found, handle it
+      return value;
+    } else {
+      // No data found
+      console.log("No data found");
+      return null;
+    }
+  } catch (error) {
+    // Error retrieving data
+    console.error("Error retrieving data:", error);
+    return null;
+  }
+};
+
+export { Colors, retrieveData };
