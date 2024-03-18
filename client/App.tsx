@@ -1,10 +1,11 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Login from "./assets/pages/Home/Login";
 import Register from "./assets/pages/Home/Register";
-import Main from "./assets/pages/Main/Main";
 import Functions from "./assets/functions/functions";
-import CreateSection from "./assets/pages/CreateSection/CreateSection";
-import AddBottle from "./assets/pages/AddBottle/AddBottle";
+import CreateSection from "./assets/pages/M/CreateSection/CreateSection";
+import AddBottle from "./assets/pages/M/AddBottle/AddBottle";
+import MainContainer from "./assets/pages/M/MainContainer";
+import EditBottle from "./assets/pages/M/EditBottle/EditBottle";
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -17,8 +18,9 @@ export default function App() {
         <Stack.Screen name="AddBottle" component={AddBottle} />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Register" component={Register} />
-        <Stack.Screen name="Main" component={Main} />
+        <Stack.Screen name="MainContainer" component={MainContainer} />
         <Stack.Screen name="CreateSection" component={CreateSection} />
+        <Stack.Screen name="EditBottle" component={EditBottle} />
       </Stack.Navigator>
     </Functions>
   );

@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { Colors } from "../../json/global";
+import { Colors } from "../../../json/global";
 
 const DashContainers = [
   {
@@ -48,10 +48,17 @@ const DashAltContainers = [
     type: 1,
   },
   {
-    number: "corner-down-left",
-    title: "Voltar",
+    title: "Encomendas",
+    func: "Adicionar",
     gradient: ["#C3FF9E", "#1ED800"],
     color: "#BEFFB4",
+    type: 1,
+  },
+  {
+    number: "corner-down-left",
+    title: "Voltar",
+    gradient: ["#9EE8FF", "#00A4D8"],
+    color: "#B4E4FF",
     type: 0,
   },
 ];
@@ -162,6 +169,87 @@ const MainStyles = StyleSheet.create({
     marginVertical: 15,
     width: 285,
   },
+  dropdown: {
+    padding: 15,
+    width: 285,
+    backgroundColor: Colors.Secondary,
+    borderRadius: 20,
+    height: 61,
+    justifyContent: "space-between",
+    alignItems: "center",
+    flexDirection: "row",
+  },
+  dropdownOpen: {
+    borderRadius: 0,
+    borderTopEndRadius: 20,
+    borderTopStartRadius: 20,
+  },
+  dropText: {
+    color: Colors.Label,
+    fontFamily: "Nunito Bold Italic",
+  },
+  dropItem: {
+    color: Colors.Primary,
+  },
+  cloudbtn: {
+    color: Colors.Text,
+    marginBottom: 10,
+    fontFamily: "Nunito Italic",
+    padding: 15,
+    width: 285,
+    backgroundColor: Colors.Third,
+    borderRadius: 20,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  quantityLbl: {
+    color: Colors.SecText,
+    fontSize: 13,
+    fontFamily: "Nunito Bold",
+    alignSelf: "flex-start",
+    marginVertical: 15,
+  },
 });
 
-export { MainStyles, DashContainers, DashAltContainers };
+const StockStyle = StyleSheet.create({
+  title: {
+    color: Colors.Primary,
+    alignSelf: "center",
+    marginTop: 20,
+    marginBottom: 80,
+    fontSize: 30,
+    fontWeight: "bold",
+    width: 220,
+    textAlign: "center",
+  },
+  WineTitle: {
+    color: "#494949",
+    fontSize: 20,
+    fontWeight: "bold",
+    marginLeft: 40,
+  },
+  Card: {
+    backgroundColor: "#FFF",
+    height: 220,
+    width: 130,
+    borderRadius: 20,
+    elevation: 10,
+    shadowColor: "#00000081",
+    marginVertical: 20,
+    marginLeft: 20,
+    padding: 15,
+  },
+  quantity: {
+    alignSelf: "flex-end",
+    fontSize: 20,
+    fontWeight: "bold",
+    color: Colors.Primary,
+  },
+  Label: {
+    fontWeight: "bold",
+    fontSize: 16,
+  },
+});
+
+export { MainStyles, DashContainers, DashAltContainers, StockStyle };

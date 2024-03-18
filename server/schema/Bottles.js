@@ -13,6 +13,10 @@ const Bottle = db.define("Bottle", {
     allowNull: false,
     unique: true,
   },
+  price: {
+    type: DataTypes.DECIMAL(10, 2),
+    allowNull: false,
+  },
   section: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -21,7 +25,7 @@ const Bottle = db.define("Bottle", {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  Quantity: {
+  quantity: {
     type: DataTypes.INTEGER,
   },
 });

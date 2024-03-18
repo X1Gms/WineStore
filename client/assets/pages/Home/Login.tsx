@@ -62,7 +62,7 @@ const Login: any = ({ navigation }: { navigation: any }) => {
                 prev.map((item) => ({ ...item, value: "" }))
               );
 
-              GoTo("Main", null);
+              GoTo("MainContainer", null);
             }, 1000);
           } else {
             Toast.show("Utilizador ou Palavra-Passe Incorretos");

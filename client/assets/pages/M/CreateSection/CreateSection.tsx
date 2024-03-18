@@ -1,11 +1,11 @@
 import { Text, View, TouchableHighlight } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import EditText from "../../components/EditText";
+import EditText from "../../../components/EditText";
 import { useState } from "react";
-import { handleInputs } from "../Home/logreg";
+import { handleInputs } from "../../Home/logreg";
 import Toast from "react-native-root-toast";
-import Requests from "../../components/Requests";
-import { MainStyles } from "../Main/mainset";
+import Requests from "../../../components/Requests";
+import { MainStyles } from "../Home/mainset";
 const CreateSection: React.FC<{ navigation: any }> = ({ navigation }) => {
   const [section, SetSection] = useState([
     {
@@ -20,7 +20,7 @@ const CreateSection: React.FC<{ navigation: any }> = ({ navigation }) => {
 
     if (emptyInputs.length === 0) {
       Requests("ctsection", "POST", { section: section[0].value.trim() })
-        .then(() => navigation.navigate("Main"))
+        .then(() => navigation.navigate("MainContainer"))
         .catch((e) => console.error(e));
     } else {
       Toast.show("Caixa de Texto Vazia");

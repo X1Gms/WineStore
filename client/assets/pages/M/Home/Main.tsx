@@ -4,11 +4,11 @@ import Icon from "react-native-vector-icons/Feather";
 import { DashContainers as DC, DashAltContainers } from "./mainset";
 import * as Animatable from "react-native-animatable";
 import LGContainer from "./LGContainer";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { retrieveData } from "../../json/global";
-import Requests from "../../components/Requests";
+import { retrieveData } from "../../../json/global";
+import Requests from "../../../components/Requests";
 import { useFocusEffect } from "@react-navigation/native";
 
 const Main: React.FC<{ navigation: any }> = ({ navigation }) => {
@@ -22,8 +22,7 @@ const Main: React.FC<{ navigation: any }> = ({ navigation }) => {
     const name = await retrieveData("name");
     setMyName(name);
 
-    const getInfo = await Requests("getinfo", "GET", null);
-    console.log(getInfo);
+    const getInfo = await Requests("getinfo", "GET");
 
     const uDashContainers = DashContainers.map((item, index) => ({
       ...item,

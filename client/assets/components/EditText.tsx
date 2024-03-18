@@ -20,6 +20,7 @@ const EditText: React.FC<{
       secureTextEntry={
         type === "password" || type === "Cpassword" ? true : false
       }
+      inputMode={type === "number" ? "decimal" : "text"}
     />
   );
 };

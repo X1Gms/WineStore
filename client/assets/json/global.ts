@@ -9,6 +9,7 @@ const Colors: { [key: string]: string } = {
   SecText: "#A8628C",
   ThText: "#8B2154",
   LightGray: "#9a9a9a",
+  Label: "#C08BA1",
 };
 
 const retrieveData = async (key: string): Promise<string | null> => {
@@ -28,5 +29,4 @@ const retrieveData = async (key: string): Promise<string | null> => {
     return null;
   }
 };
-
 export { Colors, retrieveData };

@@ -1,6 +1,11 @@
 import axios from "axios";
 
-const Requests = async (page: string, method: string, data: any) => {
+const Requests = async (
+  page: string,
+  method: string,
+  data?: any,
+  headers?: any
+) => {
   try {
     let response;
     const LOCALHOST = process.env.LOCALHOST;
@@ -11,13 +16,16 @@ const Requests = async (page: string, method: string, data: any) => {
         response = await axios.get(LOCALHOST + page);
         break;
       case "post":
-        response = await axios.post(LOCALHOST + page, data);
+        response = await axios.post(LOCALHOST + page, data, headers);
         break;
       case "put":
-        response = await axios.put(LOCALHOST + page, data);
+        response = await axios.put(LOCALHOST + page, data, headers);
+        break;
+      case "patch":
+        response = await axios.patch(LOCALHOST + page, data, headers);
         break;
       case "delete":
-        response = await axios.delete(LOCALHOST + page);
+        response = await axios.delete(LOCALHOST + page, data);
         break;
       default:
         throw new Error("Invalid HTTP method");
