@@ -71,7 +71,7 @@ app.get("/getinfo", async (req, res) => {
 
   info.push(await Bottle.count());
   info.push(await Section.count());
-  info.push(0);
+  info.push(await Order.count());
 
   res.send(info);
 });
@@ -142,9 +142,15 @@ app.post("/login", async (req, res) => {
       return;
     }
 
-    bcrypt.compare(req.body.password, user.dataValues.password, () => {
+    const match = await bcrypt.compare(req.body.password, user.password);
+
+    if (match) {
+      // Passwords match
       res.send(user.name);
-    });
+    } else {
+      // Passwords don't match
+      res.send(false);
+    }
   } catch (error) {
     console.log(error);
     res.status(500).send("Internal Server Error");
@@ -152,9 +158,10 @@ app.post("/login", async (req, res) => {
 });
 
 app.post("/addbottle", upload.single("file"), async (req, res) => {
+  let filePath; // Variable to store the file path
   try {
     const { section, quantity, bottle, price } = req.body;
-    const file = req.file.path;
+    const file = req.file;
 
     if (!price || typeof price !== "string") {
       throw new Error("Price is missing or invalid");
@@ -168,22 +175,29 @@ app.post("/addbottle", upload.single("file"), async (req, res) => {
       throw new Error("Invalid price format");
     }
 
-    const newFile = file.replace("public\\", "");
+    if (file) {
+      // If file is uploaded
+      filePath = file.path;
+      const newFile = filePath.replace("public\\", ""); // Modify file path
+      console.log(newPrice);
 
-    console.log(newPrice);
+      const cbottle = await Bottle.create({
+        name: bottle,
+        price: newPrice,
+        section: section,
+        imgSrc: newFile,
+        quantity: quantity,
+      });
 
-    const cbottle = await Bottle.create({
-      name: bottle,
-      price: newPrice,
-      section: section,
-      imgSrc: newFile,
-      quantity: quantity,
-    });
-
-    res.send(cbottle);
+      res.send(cbottle);
+    } else {
+      throw new Error("Image upload failed");
+    }
   } catch (error) {
-    // Send an error response
-    res.status(400).json({ error: "Error", message: error.message });
+    if (filePath) {
+      fs.unlinkSync(filePath);
+    }
+    res.status(500).send({ error: error.message });
   }
 });
 
@@ -247,11 +261,67 @@ app.post("/deletebottle", async (req, res) => {
   }
 });
 
+app.post("/addorder", async (req, res) => {
+  try {
+    const { address, email, name, order, phone } = req.body;
+
+    await Order.create({
+      name: name,
+      email: email,
+      phoneNumber: phone,
+      Address: address,
+      Order: order,
+    });
+
+    res.send("Successfully Sent");
+  } catch (e) {
+    res.send(e);
+  }
+});
+
+app.get("/getorder", async (req, res) => {
+  try {
+    const getOrder = await Order.findAll({
+      attributes: [
+        "id",
+        "name",
+        "email",
+        "phoneNumber",
+        "Address",
+        "Order",
+        "createdAt",
+      ],
+    });
+
+    getOrder.forEach((item) => {
+      item.Order = JSON.parse(item.Order);
+    });
+
+    res.send(getOrder);
+  } catch (e) {
+    res.status(400).send(e);
+  }
+});
+
+app.post("/finishorder", async (req, res) => {
+  try {
+    const { id } = req.body;
+
+    await Order.destroy({
+      where: { id: id },
+    });
+
+    res.send("Successfully done");
+  } catch (e) {
+    res.status(400).send(e);
+  }
+});
+
 app.listen(PORT, async () => {
   try {
     await db.sync();
     console.log(
-      `Connection has been established successfully\nRunning on ${PORT} port.`
+      `Connection has been successfully established \nRunning on ${PORT} port.`
     );
   } catch (error) {
     console.error("Unable to connect to the database:", error);

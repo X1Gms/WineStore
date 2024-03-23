@@ -9,14 +9,18 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { MainStyles } from "../Home/mainset";
 import EditText from "../../../components/EditText";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { handleInputs } from "../../Home/logreg";
 import DropDown from "../../../components/DropDown";
 import * as ImagePicker from "expo-image-picker";
 import Quantity from "../../../components/Quantity";
 import Toast from "react-native-root-toast";
 import Requests from "../../../components/Requests";
-const AddBottle: React.FC<{ navigation: any }> = ({ navigation }) => {
+import { useFocusEffect } from "@react-navigation/native";
+import { useGoto } from "../../../json/global";
+const AddBottle: React.FC = () => {
+  const GoTo = useGoto();
+
   const [bottle, SetBottle] = useState([
     {
       value: "",
@@ -38,6 +42,8 @@ const AddBottle: React.FC<{ navigation: any }> = ({ navigation }) => {
   );
   const [quantity, SetQuantity] = useState<number>(0);
 
+  const [sectionValues, SetSecValues] = useState<any[]>([]);
+
   const Counter = (funnction: string) => {
     SetQuantity((prev) => {
       switch (funnction) {
@@ -51,6 +57,21 @@ const AddBottle: React.FC<{ navigation: any }> = ({ navigation }) => {
       }
     });
   };
+
+  useFocusEffect(
+    useCallback(() => {
+      const fetchData = async () => {
+        try {
+          const info = await Requests("getsections", "GET");
+          SetSecValues(info);
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
+      };
+
+      fetchData();
+    }, [])
+  );
 
   const SendRequest = async () => {
     const emptyInput: any = bottle.filter(({ value }: any) => !value);
@@ -81,8 +102,6 @@ const AddBottle: React.FC<{ navigation: any }> = ({ navigation }) => {
 
       formData.append("file", File);
 
-      console.log(formData);
-
       Requests("addbottle", "POST", formData, {
         headers: {
           Accept: "application/json",
@@ -91,7 +110,7 @@ const AddBottle: React.FC<{ navigation: any }> = ({ navigation }) => {
       })
         .then(() => {
           setTimeout(() => {
-            navigation.navigate("MainContainer");
+            GoTo("MainContainer");
             Toast.show("Enviado com Sucesso");
           }, 1000);
         })
@@ -154,6 +173,7 @@ const AddBottle: React.FC<{ navigation: any }> = ({ navigation }) => {
               onChange={(name: string) => {
                 SetSection(name);
               }}
+              value={sectionValues}
             />
 
             <Pressable

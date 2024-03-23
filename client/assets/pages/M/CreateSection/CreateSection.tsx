@@ -6,7 +6,10 @@ import { handleInputs } from "../../Home/logreg";
 import Toast from "react-native-root-toast";
 import Requests from "../../../components/Requests";
 import { MainStyles } from "../Home/mainset";
-const CreateSection: React.FC<{ navigation: any }> = ({ navigation }) => {
+import { useGoto } from "../../../json/global";
+const CreateSection: React.FC = () => {
+  const GoTo = useGoto();
+
   const [section, SetSection] = useState([
     {
       value: "",
@@ -20,7 +23,7 @@ const CreateSection: React.FC<{ navigation: any }> = ({ navigation }) => {
 
     if (emptyInputs.length === 0) {
       Requests("ctsection", "POST", { section: section[0].value.trim() })
-        .then(() => navigation.navigate("MainContainer"))
+        .then(() => GoTo("MainContainer"))
         .catch((e) => console.error(e));
     } else {
       Toast.show("Caixa de Texto Vazia");

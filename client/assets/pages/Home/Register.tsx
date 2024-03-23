@@ -16,8 +16,11 @@ import CheckForm from "../../components/CheckForm";
 import Toast from "react-native-root-toast";
 import Requests from "../../components/Requests";
 import Icon from "react-native-vector-icons/FontAwesome5";
+import { useGoto } from "../../json/global";
 const Register: React.FC<{ navigation: any }> = ({ navigation }) => {
   const [loginInputs, SetLoginInputs] = useState(RegisterInputs);
+
+  const GoTo = useGoto();
 
   useEffect(() => {
     SetLoginInputs((prev) => prev.map((item) => ({ ...item, value: "" })));
@@ -50,7 +53,7 @@ const Register: React.FC<{ navigation: any }> = ({ navigation }) => {
             Toast.show(`${response}`);
           }, 1000);
 
-          navigation.navigate("Login");
+          GoTo("Login");
         })
         .catch((e) => {
           console.error("Axios Error:", e);
@@ -78,7 +81,7 @@ const Register: React.FC<{ navigation: any }> = ({ navigation }) => {
       >
         <Pressable
           style={[RegLogStyles.returnButton, { marginTop: 60, marginLeft: 30 }]}
-          onPress={() => navigation.navigate("Login")}
+          onPress={() => GoTo("Login")}
         >
           <Icon name="chevron-left" size={30} color="#D3AFC2" />
         </Pressable>

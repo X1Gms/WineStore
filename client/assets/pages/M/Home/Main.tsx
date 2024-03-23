@@ -1,22 +1,27 @@
-import { Text, View, ScrollView, Pressable } from "react-native";
+import { Text, View, Pressable } from "react-native";
 import { MainStyles } from "./mainset";
 import Icon from "react-native-vector-icons/Feather";
 import { DashContainers as DC, DashAltContainers } from "./mainset";
 import * as Animatable from "react-native-animatable";
 import LGContainer from "./LGContainer";
 import { useCallback, useState } from "react";
-import { LinearGradient } from "expo-linear-gradient";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { retrieveData } from "../../../json/global";
 import Requests from "../../../components/Requests";
 import { useFocusEffect } from "@react-navigation/native";
+import OrderItem from "./OrderItem";
+import { useGoto } from "../../../json/global";
 
-const Main: React.FC<{ navigation: any }> = ({ navigation }) => {
+const Main: React.FC = () => {
   const [type, SetType] = useState(false);
 
   const [myName, setMyName] = useState<string | null>(null);
 
   const [DashContainers, SetDC] = useState(DC);
+
+  const [Orders, SetOrders] = useState([]);
+
+  const GoTo = useGoto();
 
   const fetchData = async () => {
     const name = await retrieveData("name");
@@ -24,12 +29,26 @@ const Main: React.FC<{ navigation: any }> = ({ navigation }) => {
 
     const getInfo = await Requests("getinfo", "GET");
 
-    const uDashContainers = DashContainers.map((item, index) => ({
+    const getOrders = await Requests("getorder", "GET");
+
+    if (getOrders && getOrders.length > 0) {
+      getOrders.map((item: any) => {
+        const date = new Date(item.createdAt);
+        const formattedDate = `${date.getDate()}/${
+          date.getMonth() + 1
+        }/${date.getFullYear()}`;
+
+        item.createdAt = formattedDate;
+      });
+    }
+
+    const uD = DashContainers.map((item, index) => ({
       ...item,
       number: index < getInfo.length ? getInfo[index] : item.number,
     }));
 
-    SetDC(uDashContainers);
+    SetDC(uD);
+    SetOrders(getOrders);
   };
 
   useFocusEffect(
@@ -39,10 +58,6 @@ const Main: React.FC<{ navigation: any }> = ({ navigation }) => {
   );
 
   const Toggle = () => SetType((prev) => !prev);
-
-  const GoTo = (location: string) => {
-    navigation.navigate(location);
-  };
 
   return (
     <View style={{ backgroundColor: "#FFF" }}>
@@ -96,13 +111,13 @@ const Main: React.FC<{ navigation: any }> = ({ navigation }) => {
                 switch (index) {
                   case 0:
                     GoTo("CreateSection");
-
                     break;
                   case 1:
                     GoTo("AddBottle");
-
                     break;
-
+                  case 2:
+                    GoTo("AddOrder");
+                    break;
                   case DashAltContainers.length - 1:
                     Toggle();
                     break;
@@ -119,70 +134,19 @@ const Main: React.FC<{ navigation: any }> = ({ navigation }) => {
         >
           <View style={MainStyles.TasksCTs}>
             <Text style={MainStyles.Encomendas}>Encomendas</Text>
-            <Text style={MainStyles.TasksCT}>Ver Todas</Text>
+            <Pressable onPress={() => GoTo("ViewOrders", Orders)}>
+              <Text style={MainStyles.TasksCT}>Ver Todas</Text>
+            </Pressable>
           </View>
           <View style={MainStyles.GHR}></View>
           <View>
-            <View style={MainStyles.Task}>
-              <LinearGradient
-                colors={["#FA69AE", "#B53170"]}
-                style={MainStyles.Icon}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1 }}
-              >
-                <Icon name="package" size={31} color="#FFF"></Icon>
-              </LinearGradient>
-              <View
-                style={{
-                  justifyContent: "center",
-                  marginBottom: 35,
-                  flexWrap: "wrap",
-                }}
-              >
-                <Text style={MainStyles.General}>Encomenda</Text>
-                <Text style={MainStyles.name}>João Sampaio</Text>
-              </View>
-            </View>
-            <View style={MainStyles.Task}>
-              <LinearGradient
-                colors={["#FA69AE", "#B53170"]}
-                style={MainStyles.Icon}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1 }}
-              >
-                <Icon name="package" size={31} color="#FFF"></Icon>
-              </LinearGradient>
-              <View
-                style={{
-                  justifyContent: "center",
-                  marginBottom: 35,
-                  flexWrap: "wrap",
-                }}
-              >
-                <Text style={MainStyles.General}>Encomenda</Text>
-                <Text style={MainStyles.name}>Manuel Fernandes</Text>
-              </View>
-            </View>
-            <View style={MainStyles.Task}>
-              <LinearGradient
-                colors={["#FA69AE", "#B53170"]}
-                style={MainStyles.Icon}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1 }}
-              >
-                <Icon name="package" size={31} color="#FFF"></Icon>
-              </LinearGradient>
-              <View
-                style={{
-                  justifyContent: "center",
-                  marginBottom: 35,
-                  flexWrap: "wrap",
-                }}
-              >
-                <Text style={MainStyles.General}>Encomenda</Text>
-                <Text style={MainStyles.name}>Daniel Duarte</Text>
-              </View>
-            </View>
+            {Orders.length > 0 ? (
+              Orders.slice(0, 3).map((item, index) => (
+                <OrderItem data={item} key={index} />
+              ))
+            ) : (
+              <Text>Nenhuma Encomenda Efetuada</Text>
+            )}
           </View>
         </Animatable.View>
       </View>

@@ -1,33 +1,18 @@
 import { View, Text, Image, Pressable, StyleSheet } from "react-native";
 import { MainStyles } from "../pages/M/Home/mainset";
-import { useCallback, useState } from "react";
-import { useFocusEffect } from "@react-navigation/native";
-import Requests from "./Requests";
+import { useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { Colors } from "../json/global";
-const DropDown: React.FC<{ name: string; onChange: any }> = ({
+const DropDown: React.FC<{ name: string; onChange: any; value: any[] }> = ({
   name,
   onChange,
+  value,
 }) => {
   const [Handler, SetHandler] = useState(false);
-  const [list, SetList] = useState<any>([]);
+  const list = value;
+
   const HandleHandler = () => SetHandler((prev) => !prev);
   const [hoveredItem, setHoveredItem] = useState<any>(null);
-
-  useFocusEffect(
-    useCallback(() => {
-      const fetchData = async () => {
-        try {
-          const info = await Requests("getsections", "GET");
-          SetList(info);
-        } catch (error) {
-          console.error("Error fetching data:", error);
-        }
-      };
-
-      fetchData();
-    }, [])
-  );
 
   return (
     <View style={{ maxHeight: 241, marginBottom: 30 }}>

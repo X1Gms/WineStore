@@ -1,4 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from "@react-navigation/native";
 
 const Colors: { [key: string]: string } = {
   Primary: "#B53170",
@@ -29,4 +30,14 @@ const retrieveData = async (key: string): Promise<string | null> => {
     return null;
   }
 };
-export { Colors, retrieveData };
+
+const useGoto = () => {
+  const navigation: any = useNavigation();
+
+  const GoTo = (location: string, data?: any) => {
+    navigation.navigate(location, data);
+  };
+
+  return GoTo;
+};
+export { Colors, retrieveData, useGoto };

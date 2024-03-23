@@ -18,10 +18,15 @@ import Toast from "react-native-root-toast";
 import Requests from "../../../components/Requests";
 import { useFocusEffect, useRoute } from "@react-navigation/native";
 import AwesomeAlert from "react-native-awesome-alerts";
+import { useGoto } from "../../../json/global";
 
-const EditBottle: React.FC<{ navigation: any }> = ({ navigation }) => {
+const EditBottle: React.FC = () => {
   const route: any = useRoute()?.params;
   const [showMe, SetShowMe] = useState(false);
+
+  const GoTo = useGoto();
+
+  const [sectionValues, SetSecValues] = useState<any[]>([]);
 
   const [bottle, SetBottle] = useState([
     {
@@ -47,7 +52,16 @@ const EditBottle: React.FC<{ navigation: any }> = ({ navigation }) => {
 
   useFocusEffect(
     useCallback(() => {
+      const fetchData = async () => {
+        try {
+          const info = await Requests("getsections", "GET");
+          SetSecValues(info);
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
+      };
       getData();
+      fetchData();
     }, [])
   );
 
@@ -62,7 +76,7 @@ const EditBottle: React.FC<{ navigation: any }> = ({ navigation }) => {
   const SendDelete = (id: number) => {
     Requests("deletebottle", "post", { id: id })
       .then((message) => {
-        navigation.navigate("MainContainer");
+        GoTo("MainContainer");
         SetShowMe(false);
         Toast.show(message);
       })
@@ -114,11 +128,7 @@ const EditBottle: React.FC<{ navigation: any }> = ({ navigation }) => {
 
       formData.append("file", File);
 
-      console.log(formData);
-
-      const endpoint = quantity !== 0 ? "editbottle" : "deletebottle";
-
-      Requests(endpoint, "PUT", formData, {
+      Requests("editbottle", "PUT", formData, {
         headers: {
           Accept: "application/json",
           "Content-Type": "multipart/form-data",
@@ -126,7 +136,7 @@ const EditBottle: React.FC<{ navigation: any }> = ({ navigation }) => {
       })
         .then(() => {
           setTimeout(() => {
-            navigation.navigate("MainContainer");
+            GoTo("MainContainer");
             Toast.show(
               `${quantity !== 0 ? "Editado" : "Eliminado"} com Sucesso`
             );
@@ -191,6 +201,7 @@ const EditBottle: React.FC<{ navigation: any }> = ({ navigation }) => {
               onChange={(name: string) => {
                 SetSection(name);
               }}
+              value={sectionValues}
             />
 
             <Pressable

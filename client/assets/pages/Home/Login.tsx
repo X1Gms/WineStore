@@ -14,9 +14,12 @@ import { RegLogStyles } from "./logreg";
 import Requests from "../../components/Requests";
 import Toast from "react-native-root-toast";
 import { ScrollView } from "react-native";
+import { useGoto } from "../../json/global";
 
-const Login: any = ({ navigation }: { navigation: any }) => {
+const Login: React.FC<{}> = () => {
   const [loginInputs, SetLoginInputs] = useState(LoginInputs);
+
+  const GoTo = useGoto();
 
   useEffect(() => {
     Execute();
@@ -36,8 +39,6 @@ const Login: any = ({ navigation }: { navigation: any }) => {
     }
   };
 
-  const GoTo = (where: string, values: any) =>
-    navigation.navigate(where, values);
   const SendRequest = (info: any) => {
     const result: any = {};
 
@@ -62,7 +63,7 @@ const Login: any = ({ navigation }: { navigation: any }) => {
                 prev.map((item) => ({ ...item, value: "" }))
               );
 
-              GoTo("MainContainer", null);
+              GoTo("MainContainer");
             }, 1000);
           } else {
             Toast.show("Utilizador ou Palavra-Passe Incorretos");
@@ -150,7 +151,7 @@ const Login: any = ({ navigation }: { navigation: any }) => {
                 Login
               </Text>
             </TouchableHighlight>
-            <Pressable onPress={() => GoTo("Register", null)}>
+            <Pressable onPress={() => GoTo("Register")}>
               <Text
                 style={{
                   textAlign: "right",

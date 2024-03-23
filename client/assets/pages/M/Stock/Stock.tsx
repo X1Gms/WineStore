@@ -5,8 +5,7 @@ import WineSection from "./WineSection";
 import Requests from "../../../components/Requests";
 import { useCallback, useEffect, useState } from "react";
 import { useFocusEffect } from "@react-navigation/native";
-import Toast from "react-native-root-toast";
-const Stock: React.FC<any> = () => {
+const Stock: React.FC = () => {
   type Bottles = {
     section: string;
     items: {

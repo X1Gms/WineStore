@@ -131,6 +131,18 @@ const MainStyles = StyleSheet.create({
     alignItems: "center",
     marginRight: 15,
   },
+  NeoIcon: {
+    width: 47,
+    height: 47,
+    borderRadius: 10,
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: 15,
+  },
+  DateLbl: {
+    color: "#A4A4A4",
+    fontSize: 13,
+  },
   General: {
     fontWeight: "600",
     color: "#414141",
@@ -252,4 +264,85 @@ const StockStyle = StyleSheet.create({
   },
 });
 
-export { MainStyles, DashContainers, DashAltContainers, StockStyle };
+const SpecStyles = StyleSheet.create({
+  EditButton: {
+    backgroundColor: Colors.Primary,
+    width: 75,
+    height: 45,
+    borderRadius: 15,
+    alignItems: "center",
+    justifyContent: "center",
+    alignSelf: "flex-end",
+    marginRight: 20,
+    marginTop: 20,
+  },
+
+  EBText: {
+    color: "#FFF",
+    fontSize: 17,
+    fontFamily: "Nunito Bold",
+  },
+
+  Price: {
+    color: "#939393",
+    fontSize: 30,
+    fontWeight: "bold",
+  },
+
+  Quantity: {
+    color: Colors.Primary,
+    fontSize: 40,
+    fontWeight: "bold",
+  },
+
+  Name: {
+    width: 265,
+    alignSelf: "center",
+    marginTop: 15,
+    fontSize: 25,
+    fontWeight: "bold",
+  },
+});
+
+const FinishStyles = StyleSheet.create({
+  OrderV: {
+    flexDirection: "row",
+    marginTop: 120,
+    marginBottom: 60,
+  },
+  OrderLbL: { alignSelf: "center", fontWeight: "bold", fontSize: 25 },
+  Icon: {
+    width: 55,
+    height: 55,
+    borderRadius: 10,
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: 20,
+  },
+  total: {
+    marginTop: 5,
+    alignSelf: "flex-end",
+    color: Colors.Primary,
+    fontWeight: "bold",
+    fontSize: 25,
+  },
+  button: {
+    height: 65,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: Colors.Primary,
+    borderRadius: 20,
+    marginVertical: 15,
+    width: 285,
+    alignSelf: "center",
+  },
+});
+
+export {
+  MainStyles,
+  DashContainers,
+  DashAltContainers,
+  StockStyle,
+  SpecStyles,
+  FinishStyles,
+};
