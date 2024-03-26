@@ -2,6 +2,7 @@ import { Text, Image, Pressable } from "react-native";
 import { StockStyle } from "../Home/mainset";
 import { useGoto } from "../../../json/global";
 import { View } from "react-native-animatable";
+import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 
 type item = {
   index: number;
@@ -35,7 +36,7 @@ const WineItem: React.FC<{ item: item }> = ({ item }) => {
         <Image
           src={`${LOCALHOST + wine.imgSrc}`}
           style={{
-            height: 110,
+            height: hp(13.5),
             display: "flex",
             resizeMode: "contain",
           }}

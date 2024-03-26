@@ -7,6 +7,11 @@ import Toast from "react-native-root-toast";
 import Requests from "../../../components/Requests";
 import { MainStyles } from "../Home/mainset";
 import { useGoto } from "../../../json/global";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
+import { useAuth } from "../../../functions/global";
 const CreateSection: React.FC = () => {
   const GoTo = useGoto();
 
@@ -18,11 +23,23 @@ const CreateSection: React.FC = () => {
     },
   ]);
 
+  const { token } = useAuth();
+
+  const headers = {
+    Authorization: `Bearer ${token}`,
+    "Content-Type": "application/json",
+  };
+
   const onCreate = () => {
     const emptyInputs: any = section.filter(({ value }) => !value);
 
     if (emptyInputs.length === 0) {
-      Requests("ctsection", "POST", { section: section[0].value.trim() })
+      Requests(
+        "ctsection",
+        "POST",
+        { section: section[0].value.trim() },
+        headers
+      )
         .then(() => GoTo("MainContainer"))
         .catch((e) => console.error(e));
     } else {
@@ -34,7 +51,7 @@ const CreateSection: React.FC = () => {
     <SafeAreaView
       style={{ flex: 1, alignItems: "center", backgroundColor: "#FFF" }}
     >
-      <View style={{ width: 220 }}>
+      <View style={{ width: wp(70) }}>
         <Text style={MainStyles.MainTitle}>Crie uma Secção</Text>
       </View>
 
@@ -45,8 +62,12 @@ const CreateSection: React.FC = () => {
           {...item}
           style={
             !item.value
-              ? [MainStyles.input, { marginVertical: 190 }]
-              : [MainStyles.input, MainStyles.eInput, { marginVertical: 190 }]
+              ? [MainStyles.input, { marginTop: hp(25), marginBottom: hp(25) }]
+              : [
+                  MainStyles.input,
+                  MainStyles.eInput,
+                  { marginTop: hp(25), marginBottom: hp(25) },
+                ]
           }
           onChange={(value: string) =>
             SetSection((prev) => handleInputs(index, value, ...prev))
@@ -62,7 +83,7 @@ const CreateSection: React.FC = () => {
           style={{
             color: "#fff",
             fontFamily: "Nunito Bold",
-            fontSize: 30,
+            fontSize: hp(3.6),
           }}
         >
           Criar Secção

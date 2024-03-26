@@ -3,6 +3,10 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { SpecStyles } from "../Home/mainset";
 import { useRoute } from "@react-navigation/native";
 import { useGoto } from "../../../json/global";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 
 type Bottle = {
   id: number;
@@ -29,19 +33,19 @@ const Specifications: React.FC = () => {
       <Image
         src={`${process.env.LOCALHOST + wine?.imgSrc}`}
         style={{
-          height: 350,
+          height: hp(43),
           display: "flex",
           resizeMode: "contain",
-          marginTop: 75,
+          marginTop: hp(10),
         }}
       />
       <View
         style={{
-          width: 265,
+          width: hp(33),
           alignSelf: "center",
           flexDirection: "row",
           justifyContent: "space-between",
-          marginTop: 10,
+          marginTop: hp(1),
           alignItems: "flex-end",
         }}
       >

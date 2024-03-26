@@ -7,6 +7,11 @@ import Icon from "react-native-vector-icons/Feather";
 import { ScrollView } from "react-native-gesture-handler";
 import Requests from "../../components/Requests";
 import { useGoto } from "../../json/global";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
+import { useAuth } from "../../functions/global";
 
 type Order = {
   id: number;
@@ -22,6 +27,8 @@ const FinishLine = () => {
   const route = useRoute().params as Order;
   const GoTo = useGoto();
 
+  const { token } = useAuth();
+
   const data = [
     { label: "Data Pedido Enviado:", value: route.createdAt },
     { label: "E-mail:", value: route.email },
@@ -35,7 +42,10 @@ const FinishLine = () => {
       order: route.Order,
     };
 
-    Requests("finishorder", "POST", form)
+    Requests("finishorder", "POST", form, {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    })
       .then(() => {
         GoTo("MainContainer");
       })
@@ -52,7 +62,7 @@ const FinishLine = () => {
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
           >
-            <Icon name="package" size={31} color="#FFF"></Icon>
+            <Icon name="package" size={hp(4)} color="#FFF"></Icon>
           </LinearGradient>
           <Text style={FinishStyles.OrderLbL}>{route.name}</Text>
         </View>
@@ -62,28 +72,40 @@ const FinishLine = () => {
               key={index}
               style={{ flexDirection: "row", width: "100%", marginBottom: 30 }}
             >
-              <Text style={{ width: "30%", fontSize: 16, color: "#747373" }}>
+              <Text
+                style={{ width: "30%", fontSize: hp(1.8), color: "#747373" }}
+              >
                 {item.label}
               </Text>
-              <Text style={{ width: "70%", fontSize: 16, fontWeight: "bold" }}>
+              <Text
+                style={{ width: "70%", fontSize: hp(1.8), fontWeight: "bold" }}
+              >
                 {item.value}
               </Text>
             </View>
           );
         })}
         <View style={{ flexDirection: "row", width: "100%", marginBottom: 30 }}>
-          <Text style={{ width: "30%", fontSize: 16, color: "#747373" }}>
+          <Text style={{ width: "30%", fontSize: hp(1.8), color: "#747373" }}>
             Pedido:
           </Text>
           <View style={{ width: "70%" }}>
             {route.Order.map((item, index) => (
               <Text
-                style={{ color: "#949494", marginBottom: 15 }}
+                style={{
+                  color: "#949494",
+                  marginBottom: hp(1.7),
+                  fontSize: hp(1.7),
+                }}
                 key={index}
               >{`${item.wine} x${item.quantity}`}</Text>
             ))}
             <View
-              style={{ width: "100%", height: 1, backgroundColor: "#949494" }}
+              style={{
+                width: "100%",
+                height: hp(0.15),
+                backgroundColor: "#949494",
+              }}
             />
             <Text style={FinishStyles.total}>
               {route.Order.reduce(
@@ -107,7 +129,7 @@ const FinishLine = () => {
             style={{
               color: "#fff",
               fontFamily: "Nunito Bold",
-              fontSize: 26,
+              fontSize: hp(3.6),
             }}
           >
             Finalizar Entrega

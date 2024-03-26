@@ -4,6 +4,10 @@ import OrderItem from "./OrderItem";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ScrollView } from "react-native-gesture-handler";
 import { useGoto } from "../../json/global";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 const ViewOrders: React.FC = () => {
   const GoTo = useGoto();
 
@@ -22,7 +26,7 @@ const ViewOrders: React.FC = () => {
   return (
     <SafeAreaView>
       <ScrollView>
-        <View style={{ margin: 25, marginTop: 75 }}>
+        <View style={{ margin: hp(3), marginTop: hp(9) }}>
           {route && route.length > 0 ? (
             route.map((item, index) => (
               <OrderItem
@@ -42,7 +46,7 @@ const ViewOrders: React.FC = () => {
               <Text
                 style={{
                   fontWeight: "bold",
-                  fontSize: 33,
+                  fontSize: hp(4.2),
                   textAlign: "center",
                 }}
               >

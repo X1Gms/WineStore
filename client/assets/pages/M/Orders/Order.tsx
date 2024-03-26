@@ -2,6 +2,11 @@ import { View, Text, StyleSheet } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import WineOrder from "./WineOrder";
 import { Colors } from "../../../json/global";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
+
 const Order: React.FC<{ value: any[]; onDelete: any }> = ({
   value,
   onDelete,
@@ -9,7 +14,7 @@ const Order: React.FC<{ value: any[]; onDelete: any }> = ({
   const mapping = value;
 
   return (
-    <ScrollView style={{ maxHeight: 120, marginTop: 15 }}>
+    <ScrollView style={{ maxHeight: hp(15), marginTop: hp(2) }}>
       {mapping.map((item, index) => (
         <WineOrder
           name={item.wine}
@@ -32,20 +37,20 @@ const Order: React.FC<{ value: any[]; onDelete: any }> = ({
 
 const WineOrderSt = StyleSheet.create({
   style: {
-    padding: 15,
-    width: 285,
+    padding: wp(4),
+    width: wp(75),
     backgroundColor: Colors.Secondary,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
   },
   borderTopRadius: {
-    borderTopRightRadius: 20,
-    borderTopLeftRadius: 20,
+    borderTopRightRadius: wp(5.25),
+    borderTopLeftRadius: wp(5.25),
   },
   borderBottomRadius: {
-    borderBottomLeftRadius: 20,
-    borderBottomEndRadius: 20,
+    borderBottomLeftRadius: wp(5.25),
+    borderBottomEndRadius: wp(5.25),
   },
 });
 export default Order;

@@ -14,6 +14,10 @@ import util from "util";
 import fs from "fs";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
+import dotenv from "dotenv";
+import jwt from "jsonwebtoken";
+
+dotenv.config();
 
 const unlinkAsync = util.promisify(fs.unlink);
 const __filename = fileURLToPath(import.meta.url);
@@ -39,6 +43,26 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage: storage });
+
+const generateJWT = (data) => {
+  return jwt.sign(data, process.env.KWAMI, { expiresIn: "1800s" });
+};
+const authToken = (req, res, next) => {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
+
+  if (token == null) return res.sendStatus(401);
+
+  jwt.verify(token, process.env.KWAMI, (err, user) => {
+    console.log(err);
+
+    if (err) return res.sendStatus(403);
+
+    req.user = user;
+
+    next();
+  });
+};
 
 app.post("/register", (req, res) => {
   bcrypt.hash(req.body.password, 15, async (err, hash) => {
@@ -66,7 +90,7 @@ app.get("/wines", (req, res) => {
   });
 });
 
-app.get("/getinfo", async (req, res) => {
+app.get("/getinfo", authToken, async (req, res) => {
   const info = [];
 
   info.push(await Bottle.count());
@@ -120,7 +144,7 @@ app.get("/getbottles", async (req, res) => {
   }
 });
 
-app.post("/ctsection", async (req, res) => {
+app.post("/ctsection", authToken, async (req, res) => {
   await Section.create({
     section: req.body.section,
   })
@@ -146,7 +170,11 @@ app.post("/login", async (req, res) => {
 
     if (match) {
       // Passwords match
-      res.send(user.name);
+      const token = generateJWT({
+        username: user.name,
+        password: user.password,
+      });
+      res.send({ name: user.name, token: token });
     } else {
       // Passwords don't match
       res.send(false);
@@ -157,7 +185,7 @@ app.post("/login", async (req, res) => {
   }
 });
 
-app.post("/addbottle", upload.single("file"), async (req, res) => {
+app.post("/addbottle", authToken, upload.single("file"), async (req, res) => {
   let filePath; // Variable to store the file path
   try {
     const { section, quantity, bottle, price } = req.body;
@@ -179,7 +207,6 @@ app.post("/addbottle", upload.single("file"), async (req, res) => {
       // If file is uploaded
       filePath = file.path;
       const newFile = filePath.replace("public\\", ""); // Modify file path
-      console.log(newPrice);
 
       const cbottle = await Bottle.create({
         name: bottle,
@@ -201,7 +228,7 @@ app.post("/addbottle", upload.single("file"), async (req, res) => {
   }
 });
 
-app.put("/editbottle", upload.single("file"), async (req, res) => {
+app.put("/editbottle", authToken, upload.single("file"), async (req, res) => {
   try {
     const { section, quantity, bottle, price, id } = req.body;
     const { path: file } = req.file;
@@ -234,11 +261,9 @@ app.put("/editbottle", upload.single("file"), async (req, res) => {
   }
 });
 
-app.post("/deletebottle", async (req, res) => {
+app.post("/deletebottle", authToken, async (req, res) => {
   try {
     const id = req.body.id;
-    console.log(id);
-
     const bottle = await Bottle.findOne({
       where: { id: id },
     });
@@ -279,7 +304,7 @@ app.post("/addorder", async (req, res) => {
   }
 });
 
-app.get("/getorder", async (req, res) => {
+app.get("/getorder", authToken, async (req, res) => {
   try {
     const getOrder = await Order.findAll({
       attributes: [
@@ -303,7 +328,7 @@ app.get("/getorder", async (req, res) => {
   }
 });
 
-app.post("/finishorder", async (req, res) => {
+app.post("/finishorder", authToken, async (req, res) => {
   try {
     const { id } = req.body;
 

@@ -1,5 +1,9 @@
 import { Colors } from "../../json/global";
 import { StyleSheet } from "react-native";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 
 const LoginInputs: { name: string; value: string; type: string }[] = [
   {
@@ -68,47 +72,49 @@ const handleInputs = (id: number, value: string, ...prev: any[]) => {
 
 const RegLogStyles = StyleSheet.create({
   MainOne: {
-    maxWidth: 285,
+    maxWidth: wp(75),
   },
   Title: {
     fontFamily: "Sansita One",
-    fontSize: 54,
+    fontSize: wp(14),
     color: Colors.Text,
     textAlign: "center",
   },
   SubT: {
     fontFamily: "Nunito Bold",
-    fontSize: 17,
+    fontSize: wp(4.5),
     color: Colors.Primary,
     textAlign: "center",
   },
   input: {
     color: Colors.Text,
     fontFamily: "Nunito Italic",
-    padding: 15,
-    width: 285,
+    height: hp(7),
+    fontSize: hp(1.7),
+    padding: wp(4),
+    width: wp(75),
     backgroundColor: "#fff",
-    borderRadius: 20,
-    marginBottom: 45,
+    borderRadius: wp(5.25),
+    marginBottom: hp(5.5),
   },
   eInput: {
     fontFamily: "Nunito Bold Italic",
-    borderWidth: 2,
+    borderWidth: wp(0.5),
     borderColor: Colors.Primary,
   },
   button: {
-    height: 65,
+    height: hp(8),
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: Colors.Primary,
-    borderRadius: 20,
-    marginVertical: 15,
+    borderRadius: wp(5.25),
+    marginVertical: hp(1.75),
   },
   returnButton: {
     elevation: 15,
     padding: 15,
     backgroundColor: Colors.Background,
-    width: 60,
+    width: hp(8),
     alignItems: "center",
     borderRadius: 10,
     marginBottom: 20,

@@ -17,7 +17,10 @@ export default function App() {
     <Functions>
       <Stack.Navigator
         initialRouteName="Login"
-        screenOptions={{ headerShown: false }}
+        screenOptions={({ route }) => ({
+          headerShown: false,
+          tabBarVisible: route.name !== "Login" && route.name !== "Register",
+        })}
       >
         <Stack.Screen name="AddBottle" component={AddBottle} />
         <Stack.Screen name="Login" component={Login} />

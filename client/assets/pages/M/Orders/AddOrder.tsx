@@ -12,6 +12,11 @@ import Toast from "react-native-root-toast";
 import Order from "./Order";
 import CheckForm from "../../../components/CheckForm";
 import { useGoto } from "../../../json/global";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
+
 const AddOrder: React.FC = () => {
   const GoTo = useGoto();
 
@@ -164,7 +169,7 @@ const AddOrder: React.FC = () => {
     <View style={{ flex: 1, backgroundColor: "#FFF" }}>
       <ScrollView>
         <SafeAreaView style={{ alignItems: "center" }}>
-          <View style={{ width: 285 }}>
+          <View style={{ width: wp(75) }}>
             <Text style={[MainStyles.MainTitle, { marginBottom: 30 }]}>
               Adicionar Encomenda
             </Text>
@@ -223,7 +228,11 @@ const AddOrder: React.FC = () => {
             <TouchableHighlight
               style={[
                 MainStyles.button,
-                { marginVertical: 0, marginTop: 15, marginBottom: 15 },
+                {
+                  marginVertical: 0,
+                  marginTop: hp(2.5),
+                  marginBottom: hp(1.5),
+                },
               ]}
               underlayColor="#FFD6E9"
               onPress={() => {
@@ -234,7 +243,7 @@ const AddOrder: React.FC = () => {
                 style={{
                   color: "#fff",
                   fontFamily: "Nunito Bold",
-                  fontSize: 25,
+                  fontSize: hp(3.6),
                 }}
               >
                 Submeter Bebida
@@ -253,7 +262,7 @@ const AddOrder: React.FC = () => {
                 style={{
                   color: "#fff",
                   fontFamily: "Nunito Bold",
-                  fontSize: 25,
+                  fontSize: hp(3),
                 }}
               >
                 Submeter Encomenda

@@ -5,6 +5,11 @@ import WineSection from "./WineSection";
 import Requests from "../../../components/Requests";
 import { useCallback, useEffect, useState } from "react";
 import { useFocusEffect } from "@react-navigation/native";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
+
 const Stock: React.FC = () => {
   type Bottles = {
     section: string;
@@ -43,12 +48,12 @@ const Stock: React.FC = () => {
         ) : (
           <Text
             style={{
-              fontSize: 30,
+              fontSize: wp(7),
               textAlign: "center",
-              width: 300,
+              width: wp(60),
               alignSelf: "center",
               fontWeight: "600",
-              marginTop: 150,
+              marginTop: hp(18),
             }}
           >
             Adicione bebidas para que possa visualizá-las 🍷

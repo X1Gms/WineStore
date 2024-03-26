@@ -11,44 +11,71 @@ import Requests from "../../../components/Requests";
 import { useFocusEffect } from "@react-navigation/native";
 import OrderItem from "./OrderItem";
 import { useGoto } from "../../../json/global";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
+import { useAuth } from "../../../functions/global";
 
 const Main: React.FC = () => {
+  const { token, setAuthToken } = useAuth();
   const [type, SetType] = useState(false);
-
   const [myName, setMyName] = useState<string | null>(null);
-
   const [DashContainers, SetDC] = useState(DC);
-
   const [Orders, SetOrders] = useState([]);
-
   const GoTo = useGoto();
 
   const fetchData = async () => {
-    const name = await retrieveData("name");
-    setMyName(name);
+    try {
+      // Retrieve the token
+      const retrieve = await retrieveData("name");
+      const JsON = JSON.parse(retrieve as any);
+      setAuthToken(JsON.token);
 
-    const getInfo = await Requests("getinfo", "GET");
+      if (!JsON.token) {
+        console.error("Token is null or undefined");
+        return;
+      }
 
-    const getOrders = await Requests("getorder", "GET");
+      // Construct headers with the token
 
-    if (getOrders && getOrders.length > 0) {
-      getOrders.map((item: any) => {
-        const date = new Date(item.createdAt);
-        const formattedDate = `${date.getDate()}/${
-          date.getMonth() + 1
-        }/${date.getFullYear()}`;
+      const name = JsON.name;
+      setMyName(name);
 
-        item.createdAt = formattedDate;
+      // Make requests only if token is not null
+      const requestCount = await Requests("getinfo", "GET", null, {
+        Authorization: `Bearer ${JsON.token}`,
+        "Content-Type": "application/json",
       });
+      const getInfo = requestCount || [0, 0, 0];
+
+      const requestOrders = await Requests("getorder", "GET", null, {
+        Authorization: `Bearer ${JsON.token}`,
+        "Content-Type": "application/json",
+      });
+      let getOrders = requestOrders || [];
+
+      if (getOrders && getOrders.length > 0) {
+        getOrders = getOrders.map((item: any) => {
+          const date = new Date(item.createdAt);
+          const formattedDate = `${date.getDate()}/${
+            date.getMonth() + 1
+          }/${date.getFullYear()}`;
+          return { ...item, createdAt: formattedDate };
+        });
+      }
+
+      const uD = DashContainers.map((item, index) => ({
+        ...item,
+        number: index < getInfo.length ? getInfo[index] : item.number,
+      }));
+
+      SetDC(uD);
+      SetOrders(getOrders);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      // Handle error if necessary
     }
-
-    const uD = DashContainers.map((item, index) => ({
-      ...item,
-      number: index < getInfo.length ? getInfo[index] : item.number,
-    }));
-
-    SetDC(uD);
-    SetOrders(getOrders);
   };
 
   useFocusEffect(
@@ -61,20 +88,20 @@ const Main: React.FC = () => {
 
   return (
     <View style={{ backgroundColor: "#FFF" }}>
-      <View style={{ marginTop: 50, marginHorizontal: 25 }}>
+      <View style={{ marginTop: 50, marginHorizontal: wp(6.4) }}>
         <View style={{ justifyContent: "space-between", flexDirection: "row" }}>
           <View>
             <Text style={MainStyles.Welcome}>Bem-Vindo(a) de Volta</Text>
             <Text style={MainStyles.MyName}>{myName}</Text>
           </View>
           <Pressable
-            style={[MainStyles.returnButton, { marginRight: 10 }]}
+            style={[MainStyles.returnButton, { marginRight: wp(1.75) }]}
             onPress={async () => {
               await AsyncStorage.setItem("info", "");
               GoTo("Login");
             }}
           >
-            <Icon name="log-out" size={30} color="#B53170" />
+            <Icon name="log-out" size={wp(7)} color="#B53170" />
           </Pressable>
         </View>
         <Animatable.View
@@ -145,7 +172,9 @@ const Main: React.FC = () => {
                 <OrderItem data={item} key={index} />
               ))
             ) : (
-              <Text>Nenhuma Encomenda Efetuada</Text>
+              <Text style={{ fontSize: hp(1.8) }}>
+                Nenhuma Encomenda Efetuada
+              </Text>
             )}
           </View>
         </Animatable.View>

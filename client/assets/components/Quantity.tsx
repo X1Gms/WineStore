@@ -1,6 +1,10 @@
 import { View, Text, Pressable, StyleSheet } from "react-native";
 import Icon from "react-native-vector-icons/Feather";
 import { Colors } from "../json/global";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 const Quantity: React.FC<{ number: number; onChange: any }> = ({
   number,
   onChange,
@@ -8,13 +12,13 @@ const Quantity: React.FC<{ number: number; onChange: any }> = ({
   return (
     <View style={styles.Container}>
       <Pressable style={styles.plus} onPress={() => onChange("plus")}>
-        <Icon name="plus" size={35} color={Colors.SecText} />
+        <Icon name="plus" size={wp(9)} color={Colors.SecText} />
       </Pressable>
       <View style={styles.number}>
         <Text style={styles.numbert}>{number}</Text>
       </View>
       <Pressable style={styles.minus} onPress={() => onChange("minus")}>
-        <Icon name="minus" size={35} color={Colors.SecText} />
+        <Icon name="minus" size={wp(9)} color={Colors.SecText} />
       </Pressable>
     </View>
   );
@@ -25,26 +29,26 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   plus: {
-    width: 75,
-    height: 60,
+    width: hp(9),
+    height: hp(7.3),
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: Colors.Third,
-    borderTopStartRadius: 20,
-    borderBottomLeftRadius: 20,
+    borderTopStartRadius: wp(4.5),
+    borderBottomLeftRadius: wp(4.5),
   },
   minus: {
-    width: 75,
-    height: 60,
+    width: hp(9),
+    height: hp(7.3),
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: Colors.Third,
-    borderTopRightRadius: 20,
-    borderBottomRightRadius: 20,
+    borderTopRightRadius: wp(4.5),
+    borderBottomRightRadius: wp(4.5),
   },
   number: {
-    width: 85,
-    height: 60,
+    width: hp(10.25),
+    height: hp(7.3),
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#FFEBF6",
@@ -52,7 +56,7 @@ const styles = StyleSheet.create({
   numbert: {
     fontFamily: "Sansita One",
     color: "#D195B9",
-    fontSize: 45,
+    fontSize: hp(5),
   },
 });
 export default Quantity;

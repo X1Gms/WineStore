@@ -2,6 +2,10 @@ import { View, Text, Pressable } from "react-native";
 import { MainStyles } from "../M/Home/mainset";
 import { LinearGradient } from "expo-linear-gradient";
 import Icon from "react-native-vector-icons/Feather";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 
 type Order = {
   id: number;
@@ -25,12 +29,12 @@ const OrderItem: React.FC<{ data: Order; navigation: any }> = ({
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
       >
-        <Icon name="package" size={25} color="#FFF"></Icon>
+        <Icon name="package" size={hp(4)} color="#FFF"></Icon>
       </LinearGradient>
       <View
         style={{
           justifyContent: "center",
-          marginBottom: 35,
+          marginBottom: hp(4.5),
           flexWrap: "wrap",
         }}
       >

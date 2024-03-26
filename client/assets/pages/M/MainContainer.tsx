@@ -3,8 +3,15 @@ import Main from "./Home/Main";
 import Stock from "./Stock/Stock";
 import Icon from "react-native-vector-icons/Ionicons";
 import { Colors } from "../../json/global";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
+import { Dimensions } from "react-native";
 const MainContainer = () => {
   const Tab = createBottomTabNavigator();
+
+  const { width } = Dimensions.get("window");
 
   return (
     <Tab.Navigator
@@ -20,15 +27,25 @@ const MainContainer = () => {
             iconName = focused ? "clipboard" : "clipboard-outline";
           }
 
-          return <Icon name={iconName} size={size} color={color} />;
+          return <Icon name={iconName} size={hp(3)} color={color} />;
         },
 
         headerShown: false,
         tabBarActiveTintColor: Colors.Primary,
-        tabBarLabelStyle: { paddingBottom: 10, fontSize: 10 },
+        tabBarItemStyle: { flexDirection: "column" },
+
+        tabBarLabelStyle: {
+          paddingBottom: hp(1),
+          fontSize: hp(1.5),
+        },
+        tabBarIconStyle: {
+          height: hp(3),
+          width: hp(3),
+          marginLeft: width >= 600 ? 20 : 0,
+        },
         tabBarStyle: {
           padding: 10,
-          height: 60,
+          height: hp(8),
           borderTopRightRadius: 20,
           borderTopLeftRadius: 20,
         },

@@ -15,6 +15,7 @@ import Requests from "../../components/Requests";
 import Toast from "react-native-root-toast";
 import { ScrollView } from "react-native";
 import { useGoto } from "../../json/global";
+import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 
 const Login: React.FC<{}> = () => {
   const [loginInputs, SetLoginInputs] = useState(LoginInputs);
@@ -56,7 +57,7 @@ const Login: React.FC<{}> = () => {
         .then(async (response) => {
           if (response) {
             await AsyncStorage.setItem("info", JSON.stringify(result));
-            await AsyncStorage.setItem("name", response);
+            await AsyncStorage.setItem("name", JSON.stringify(response));
 
             setTimeout(() => {
               SetLoginInputs((prev) =>
@@ -96,13 +97,13 @@ const Login: React.FC<{}> = () => {
         <View
           style={{
             alignItems: "center",
-            paddingTop: 150,
+            paddingTop: hp(16),
             flex: 1,
           }}
         >
           <View style={[RegLogStyles.MainOne]}>
             <Text style={RegLogStyles.Title}>Bem-Vindo</Text>
-            <Text style={[RegLogStyles.SubT, { marginBottom: 60 }]}>
+            <Text style={[RegLogStyles.SubT, { marginBottom: hp(6.5) }]}>
               Vamos Pôr a Mão na Massa
             </Text>
             <View style={{ alignItems: "center" }}>
@@ -128,9 +129,9 @@ const Login: React.FC<{}> = () => {
               <Text
                 style={{
                   textAlign: "right",
-                  fontSize: 16,
+                  fontSize: hp(2),
                   color: Colors.Primary,
-                  marginBottom: 10,
+                  marginBottom: hp(1),
                 }}
               >
                 Esqueceu da Palavra-Passe?
@@ -145,7 +146,7 @@ const Login: React.FC<{}> = () => {
                 style={{
                   color: "#fff",
                   fontFamily: "Nunito Bold",
-                  fontSize: 30,
+                  fontSize: hp(3.6),
                 }}
               >
                 Login
@@ -155,7 +156,7 @@ const Login: React.FC<{}> = () => {
               <Text
                 style={{
                   textAlign: "right",
-                  fontSize: 16,
+                  fontSize: hp(2),
                   color: Colors.Primary,
                 }}
               >
@@ -164,9 +165,9 @@ const Login: React.FC<{}> = () => {
             </Pressable>
             <Text
               style={{
-                marginTop: 60,
+                marginTop: hp(7.5),
                 textAlign: "center",
-                fontSize: 16,
+                fontSize: hp(2),
                 color: "#c1a6b613",
               }}
             >

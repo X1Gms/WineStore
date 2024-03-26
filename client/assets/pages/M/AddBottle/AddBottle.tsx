@@ -18,7 +18,15 @@ import Toast from "react-native-root-toast";
 import Requests from "../../../components/Requests";
 import { useFocusEffect } from "@react-navigation/native";
 import { useGoto } from "../../../json/global";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
+import { useAuth } from "../../../functions/global";
+
 const AddBottle: React.FC = () => {
+  const { token } = useAuth();
+
   const GoTo = useGoto();
 
   const [bottle, SetBottle] = useState([
@@ -62,7 +70,7 @@ const AddBottle: React.FC = () => {
     useCallback(() => {
       const fetchData = async () => {
         try {
-          const info = await Requests("getsections", "GET");
+          const info = await Requests("getsections", "GET", "");
           SetSecValues(info);
         } catch (error) {
           console.error("Error fetching data:", error);
@@ -103,10 +111,9 @@ const AddBottle: React.FC = () => {
       formData.append("file", File);
 
       Requests("addbottle", "POST", formData, {
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "multipart/form-data",
-        },
+        Accept: "application/json",
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${token}`,
       })
         .then(() => {
           setTimeout(() => {
@@ -142,11 +149,11 @@ const AddBottle: React.FC = () => {
     <View style={{ flex: 1, backgroundColor: "#FFF" }}>
       <ScrollView>
         <SafeAreaView style={{ alignItems: "center" }}>
-          <View style={{ width: 285 }}>
-            <View style={{ width: 220, alignSelf: "center" }}>
+          <View style={{ width: wp(75) }}>
+            <View style={{ width: wp(60), alignSelf: "center" }}>
               <Text style={[MainStyles.MainTitle]}>Adicione Bebida</Text>
             </View>
-            <View style={{ marginTop: 30 }}>
+            <View style={{ marginTop: hp(2.5) }}>
               {bottle.map((item, index) => (
                 <EditText
                   id={index}
@@ -154,11 +161,11 @@ const AddBottle: React.FC = () => {
                   {...item}
                   style={
                     !item.value
-                      ? [MainStyles.input, { marginBottom: 30 }]
+                      ? [MainStyles.input, { marginBottom: hp(2.5) }]
                       : [
                           MainStyles.input,
                           MainStyles.eInput,
-                          { marginBottom: 30 },
+                          { marginBottom: hp(2.5) },
                         ]
                   }
                   onChange={(value: string) =>
@@ -183,14 +190,18 @@ const AddBottle: React.FC = () => {
               }}
             >
               <Image
-                style={{ width: 30, height: 30, marginRight: 5 }}
+                style={{
+                  width: wp(7),
+                  height: wp(7),
+                  marginRight: hp(1),
+                }}
                 source={require("../../../images/imgs/cloud.png")}
               />
               <Text
                 style={{
                   fontFamily: "Nunito Bold",
                   color: "#AD608E",
-                  fontSize: 23,
+                  fontSize: hp(3.25),
                 }}
               >
                 Carregar Imagem
@@ -219,7 +230,7 @@ const AddBottle: React.FC = () => {
                 style={{
                   color: "#fff",
                   fontFamily: "Nunito Bold",
-                  fontSize: 25,
+                  fontSize: hp(3.6),
                 }}
               >
                 Submeter Bebida

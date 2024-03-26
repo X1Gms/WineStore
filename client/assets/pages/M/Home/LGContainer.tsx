@@ -2,6 +2,11 @@ import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import Icon from "react-native-vector-icons/Feather";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
+
 const LGContainer: React.FC<{
   id: number;
   number?: any;
@@ -13,7 +18,10 @@ const LGContainer: React.FC<{
   func?: any;
 }> = ({ id, number, title, gradient, color, onPress, type, func }) => {
   return (
-    <Pressable style={{ marginRight: id % 2 === 0 ? 16 : 0 }} onPress={onPress}>
+    <Pressable
+      style={{ marginRight: id % 2 === 0 ? wp(3) : 0 }}
+      onPress={onPress}
+    >
       <LinearGradient
         style={styles.StatusM}
         start={{ x: 0, y: 0 }}
@@ -26,7 +34,7 @@ const LGContainer: React.FC<{
               {typeof number === "number" ? (
                 number
               ) : (
-                <Icon size={40} name={number} />
+                <Icon size={hp(6)} name={number} />
               )}
             </Text>
             <Text style={[styles.StatusSub, { color }]}>{title}</Text>
@@ -46,30 +54,30 @@ const LGContainer: React.FC<{
 export default LGContainer;
 const styles = StyleSheet.create({
   StatusM: {
-    width: 163,
-    height: 122,
-    borderRadius: 25,
-    marginBottom: 15,
-    padding: 10,
+    width: wp(41),
+    height: hp(14.5),
+    borderRadius: wp(5),
+    marginBottom: hp(1.5),
+    padding: wp(2),
     justifyContent: "center",
     alignItems: "center",
   },
   StatusTitle: {
-    fontSize: 35,
+    fontSize: hp(4.5),
     color: "#fff",
     textAlign: "center",
     fontFamily: "Inter Bold",
   },
   StatusSub: {
     textAlign: "center",
-    fontSize: 18,
-    lineHeight: 18,
+    fontSize: hp(2.2),
+    lineHeight: hp(2.2),
     fontFamily: "Inter Bold",
   },
   StatusAltTitle: {
-    fontSize: 21,
+    fontSize: hp(2.6),
     color: "#FFF",
-    lineHeight: 25,
+    lineHeight: hp(2.6),
     fontFamily: "Inter Bold",
   },
 });

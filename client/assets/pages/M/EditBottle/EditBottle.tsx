@@ -19,10 +19,28 @@ import Requests from "../../../components/Requests";
 import { useFocusEffect, useRoute } from "@react-navigation/native";
 import AwesomeAlert from "react-native-awesome-alerts";
 import { useGoto } from "../../../json/global";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
+import { useAuth } from "../../../functions/global";
 
 const EditBottle: React.FC = () => {
   const route: any = useRoute()?.params;
   const [showMe, SetShowMe] = useState(false);
+
+  const { token } = useAuth();
+
+  const headers = {
+    Accept: "application/json",
+    "Content-Type": "multipart/form-data",
+    Authorization: `Bearer ${token}`,
+  };
+
+  const headers2 = {
+    Accept: "application/json",
+    Authorization: `Bearer ${token}`,
+  };
 
   const GoTo = useGoto();
 
@@ -54,7 +72,7 @@ const EditBottle: React.FC = () => {
     useCallback(() => {
       const fetchData = async () => {
         try {
-          const info = await Requests("getsections", "GET");
+          const info = await Requests("getsections", "GET", "", headers);
           SetSecValues(info);
         } catch (error) {
           console.error("Error fetching data:", error);
@@ -74,7 +92,7 @@ const EditBottle: React.FC = () => {
   const [quantity, SetQuantity] = useState<number>(route.quantity);
 
   const SendDelete = (id: number) => {
-    Requests("deletebottle", "post", { id: id })
+    Requests("deletebottle", "post", { id: id }, headers2)
       .then((message) => {
         GoTo("MainContainer");
         SetShowMe(false);
@@ -129,10 +147,9 @@ const EditBottle: React.FC = () => {
       formData.append("file", File);
 
       Requests("editbottle", "PUT", formData, {
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "multipart/form-data",
-        },
+        Accept: "application/json",
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${token}`,
       })
         .then(() => {
           setTimeout(() => {
@@ -143,7 +160,7 @@ const EditBottle: React.FC = () => {
           }, 1000);
         })
         .catch((e: any) => {
-          console.warn("Imagem não Carregada");
+          console.warn("Imagem Não Carregada");
         });
     }
   };
@@ -170,11 +187,11 @@ const EditBottle: React.FC = () => {
     <View style={{ flex: 1, backgroundColor: "#FFF" }}>
       <ScrollView>
         <SafeAreaView style={{ alignItems: "center" }}>
-          <View style={{ width: 285 }}>
-            <View style={{ width: 220, alignSelf: "center" }}>
+          <View style={{ width: wp(75) }}>
+            <View style={{ width: wp(60), alignSelf: "center" }}>
               <Text style={[MainStyles.MainTitle]}>Editar Bebida</Text>
             </View>
-            <View style={{ marginTop: 30 }}>
+            <View style={{ marginTop: hp(2.5) }}>
               {bottle.map((item, index) => (
                 <EditText
                   id={index}
@@ -182,11 +199,11 @@ const EditBottle: React.FC = () => {
                   {...item}
                   style={
                     !item.value
-                      ? [MainStyles.input, { marginBottom: 30 }]
+                      ? [MainStyles.input, { marginBottom: hp(2.5) }]
                       : [
                           MainStyles.input,
                           MainStyles.eInput,
-                          { marginBottom: 30 },
+                          { marginBottom: hp(2.5) },
                         ]
                   }
                   onChange={(value: string) =>
@@ -211,14 +228,14 @@ const EditBottle: React.FC = () => {
               }}
             >
               <Image
-                style={{ width: 30, height: 30, marginRight: 5 }}
+                style={{ width: wp(7), height: wp(7), marginRight: hp(1) }}
                 source={require("../../../images/imgs/cloud.png")}
               />
               <Text
                 style={{
                   fontFamily: "Nunito Bold",
                   color: "#AD608E",
-                  fontSize: 23,
+                  fontSize: hp(3.25),
                 }}
               >
                 Carregar Imagem
@@ -228,8 +245,9 @@ const EditBottle: React.FC = () => {
             <Image
               source={file ? { uri: file } : { uri: wine }}
               style={{
-                height: 180,
-                width: 136,
+                marginTop: hp(1),
+                height: hp(21),
+                width: hp(16),
                 display: file === wine ? "none" : "flex",
               }}
             />
@@ -247,7 +265,7 @@ const EditBottle: React.FC = () => {
                 style={{
                   color: "#fff",
                   fontFamily: "Nunito Bold",
-                  fontSize: 25,
+                  fontSize: hp(3.6),
                 }}
               >
                 Submeter Bebida
@@ -264,7 +282,7 @@ const EditBottle: React.FC = () => {
                 style={{
                   color: "#fff",
                   fontFamily: "Nunito Bold",
-                  fontSize: 25,
+                  fontSize: hp(3.6),
                 }}
               >
                 Eliminar Bebida
@@ -274,18 +292,30 @@ const EditBottle: React.FC = () => {
           <AwesomeAlert
             show={showMe}
             title="Confirmação"
-            titleStyle={{ fontSize: 23, fontWeight: "bold", color: "#000" }}
+            titleStyle={{
+              fontSize: hp(2.8),
+              fontWeight: "bold",
+              color: "#000",
+            }}
             message="Tem a certeza que deseja proceder com a eliminação desta garrafa?"
-            messageStyle={{ width: 230 }}
+            messageStyle={{ width: wp(58), fontSize: wp(3.6) }}
             showCancelButton
             cancelText="Cancelar"
             cancelButtonStyle={{ backgroundColor: "#fff" }}
-            cancelButtonTextStyle={{ color: "#a1a1a1", fontWeight: "500" }}
+            cancelButtonTextStyle={{
+              color: "#a1a1a1",
+              fontWeight: "500",
+              fontSize: wp(3.6),
+            }}
             onCancelPressed={() => SetShowMe(false)}
             showConfirmButton
             confirmText="Eliminar"
             confirmButtonStyle={{ backgroundColor: "#fff" }}
-            confirmButtonTextStyle={{ color: "#000000", fontWeight: "500" }}
+            confirmButtonTextStyle={{
+              color: "#000000",
+              fontWeight: "500",
+              fontSize: wp(3.6),
+            }}
             onConfirmPressed={() => SendDelete(route.id)}
           />
         </SafeAreaView>

@@ -2,6 +2,7 @@ import { Text } from "react-native";
 import PasswordCt from "./PasswordCt";
 import { PasswordSecurity } from "../pages/Home/logreg";
 import { View } from "react-native";
+import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 
 const PasswordCriteria: React.FC<{
   input:
@@ -20,7 +21,7 @@ const PasswordCriteria: React.FC<{
         ))}
       </View>
     ) : (
-      <Text style={{ fontSize: 25, textAlign: "center" }}>
+      <Text style={{ fontSize: hp(3), textAlign: "center" }}>
         Palavra-Passe não{`\n`}Preenchida ⚠️
       </Text>
     );

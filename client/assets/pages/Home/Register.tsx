@@ -17,6 +17,11 @@ import Toast from "react-native-root-toast";
 import Requests from "../../components/Requests";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { useGoto } from "../../json/global";
+import {
+  heightPercentageToDP as hp,
+  widthPercentageToDP as wp,
+} from "react-native-responsive-screen";
+
 const Register: React.FC<{ navigation: any }> = ({ navigation }) => {
   const [loginInputs, SetLoginInputs] = useState(RegisterInputs);
 
@@ -83,7 +88,7 @@ const Register: React.FC<{ navigation: any }> = ({ navigation }) => {
           style={[RegLogStyles.returnButton, { marginTop: 60, marginLeft: 30 }]}
           onPress={() => GoTo("Login")}
         >
-          <Icon name="chevron-left" size={30} color="#D3AFC2" />
+          <Icon name="chevron-left" size={wp(8)} color="#D3AFC2" />
         </Pressable>
         <View style={{ alignItems: "center" }}>
           <View style={[RegLogStyles.MainOne, { marginTop: 0 }]}>
@@ -114,7 +119,7 @@ const Register: React.FC<{ navigation: any }> = ({ navigation }) => {
               <Text
                 style={{
                   textAlign: "right",
-                  fontSize: 16,
+                  fontSize: hp(2),
                   color: Colors.Primary,
                 }}
               >
@@ -130,7 +135,7 @@ const Register: React.FC<{ navigation: any }> = ({ navigation }) => {
                 style={{
                   color: "#fff",
                   fontFamily: "Nunito Bold",
-                  fontSize: 30,
+                  fontSize: hp(3.6),
                 }}
               >
                 Criar Conta

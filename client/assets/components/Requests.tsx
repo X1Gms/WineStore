@@ -13,23 +13,33 @@ const Requests = async (
 
     switch (method.toLocaleLowerCase()) {
       case "get":
-        response = await axios.get(LOCALHOST + page);
+        response = await axios.get(LOCALHOST + page, { headers: headers });
         break;
       case "post":
-        response = await axios.post(LOCALHOST + page, data, headers);
+        response = await axios.post(LOCALHOST + page, data, {
+          headers: headers,
+        });
         break;
       case "put":
-        response = await axios.put(LOCALHOST + page, data, headers);
+        response = await axios.put(LOCALHOST + page, data, {
+          headers: headers,
+        });
         break;
       case "patch":
-        response = await axios.patch(LOCALHOST + page, data, headers);
+        response = await axios.patch(LOCALHOST + page, data, {
+          headers: headers,
+        });
         break;
       case "delete":
-        response = await axios.delete(LOCALHOST + page, data);
+        response = await axios.delete(LOCALHOST + page, {
+          headers: headers,
+          data: data,
+        });
         break;
       default:
         throw new Error("Invalid HTTP method");
     }
+
     if (
       response &&
       response.data &&

@@ -1,6 +1,11 @@
 import { View, Text, Pressable } from "react-native";
 import Icon from "react-native-vector-icons/Feather";
 import { Colors } from "../../../json/global";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
+
 const WineOrder: React.FC<{
   name: string;
   style: {};
@@ -13,7 +18,7 @@ const WineOrder: React.FC<{
       <Text
         style={{
           color: Colors.SecText,
-          fontSize: 16,
+          fontSize: wp(4),
           fontFamily: "Nunito Italic",
         }}
       >
@@ -26,7 +31,7 @@ const WineOrder: React.FC<{
           onDelete(id);
         }}
       >
-        <Icon name="minus" size={33} color={Colors.SecText} />
+        <Icon name="minus" size={wp(8)} color={Colors.SecText} />
       </Pressable>
     </View>
   );

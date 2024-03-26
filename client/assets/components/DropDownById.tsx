@@ -3,6 +3,10 @@ import { MainStyles } from "../pages/M/Home/mainset";
 import { useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { Colors } from "../json/global";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 const DropDownById: React.FC<{ name: string; onChange: any; value: any[] }> = ({
   name,
   onChange,
@@ -15,7 +19,7 @@ const DropDownById: React.FC<{ name: string; onChange: any; value: any[] }> = ({
   const [hoveredItem, setHoveredItem] = useState<any>(null);
 
   return (
-    <View style={{ maxHeight: 241, marginBottom: 30 }}>
+    <View style={{ maxHeight: hp(28), marginBottom: hp(4) }}>
       <Pressable
         style={
           Handler === true
@@ -35,7 +39,7 @@ const DropDownById: React.FC<{ name: string; onChange: any; value: any[] }> = ({
         <View
           style={{
             backgroundColor: Colors.Third,
-            borderRadius: 20,
+            borderRadius: wp(5.25),
           }}
         >
           {list.map((item: any, index: number) => (
@@ -50,18 +54,19 @@ const DropDownById: React.FC<{ name: string; onChange: any; value: any[] }> = ({
             >
               <View
                 style={[
-                  [MainStyles.input, { backgroundColor: Colors.Third }],
+                  [
+                    MainStyles.input,
+                    { backgroundColor: Colors.Third, marginBottom: 0 },
+                  ],
                   hoveredItem === index && { backgroundColor: "#F1CEE5" }, // Customize background color on hover
                   list.length - 1 === index
                     ? {
-                        height: 60,
                         borderTopEndRadius: 0,
                         borderTopStartRadius: 0,
                         justifyContent: "center",
                       }
                     : {
                         borderRadius: 0,
-                        height: 60,
                         justifyContent: "center",
                       },
                 ]}
